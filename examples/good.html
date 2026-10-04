@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Acme — Simple landing</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #0f172a; font-size: 16px; line-height: 1.6; }
+header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #ffffff; border-bottom: 1px solid #e2e8f0; }
+nav a { display: inline-block; padding: 12px 16px; color: #0f172a; text-decoration: none; font-size: 16px; line-height: 1.6; }
+.hero { padding: 48px 24px; text-align: center; background: #ffffff; }
+.hero h1 { font-size: 48px; line-height: 1.15; margin: 0 auto 16px; color: #0f172a; max-width: 800px; }
+.hero p { max-width: 640px; margin: 0 auto 24px; color: #475569; font-size: 18px; }
+.btn { display: inline-block; padding: 14px 28px; background: #2563eb; color: #ffffff; border-radius: 8px; text-decoration: none; font-size: 16px; line-height: 1.5; min-width: 24px; min-height: 24px; }
+.btn-secondary { display: inline-block; padding: 14px 28px; background: #ffffff; color: #0f172a; border: 2px solid #e2e8f0; border-radius: 8px; text-decoration: none; font-size: 16px; margin-left: 12px; min-height: 24px; }
+.features { display: flex; gap: 24px; padding: 24px; max-width: 960px; margin: 0 auto; flex-wrap: wrap; }
+.card { flex: 1 1 260px; background: #f1f5f9; padding: 24px; border-radius: 12px; color: #0f172a; }
+.card h2 { font-size: 24px; margin: 0 0 8px; color: #0f172a; }
+.card p { margin: 0; color: #475569; font-size: 16px; }
+footer { background: #0f172a; color: #ffffff; padding: 24px; text-align: center; font-size: 16px; }
+footer a { display: inline-block; padding: 12px 16px; color: #ffffff; }
+@media (max-width: 600px) { .hero h1 { font-size: 36px; } .features { flex-direction: column; } }
+</style>
+</head>
+<body>
+<header>
+<div style="font-weight:700;font-size:20px;color:#0f172a">Acme</div>
+<nav><a href="#features">Features</a><a href="#pricing">Pricing</a></nav>
+</header>
+<main>
+<section class="hero">
+<h1>Ship reliable interfaces faster</h1>
+<p>Visproof checks your pages for visual defects before your users see them.</p>
+<div><a class="btn" href="#start">Get started</a><a class="btn-secondary" href="#docs">Docs</a></div>
+</section>
+<section id="features" class="features">
+<div class="card"><h2>Fast checks</h2><p>Deterministic geometry checks run in seconds.</p></div>
+<div class="card"><h2>Clear evidence</h2><p>Annotated screenshots show every issue.</p></div>
+<div class="card"><h2>CI ready</h2><p>Exit codes gate your deploys safely.</p></div>
+</section>
+</main>
+<footer><span>© 2026 Acme Inc.</span><a href="#privacy">Privacy</a></footer>
+</body>
+</html>

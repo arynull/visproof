@@ -1,0 +1,48 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npx eslint src/ bin/
+
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: CLI smoke test (init / render / check / gate)
+        run: |
+          set -e
+          export VISPROOF_DEMO_DIR="$(mktemp -d)"
+          cd "$VISPROOF_DEMO_DIR"
+          node "$GITHUB_WORKSPACE/bin/visproof.js" --version
+          node "$GITHUB_WORKSPACE/bin/visproof.js" init
+          test -f design-system/tokens.json
+          # the good fixture must pass the gate
+          node "$GITHUB_WORKSPACE/bin/visproof.js" gate "$GITHUB_WORKSPACE/examples/good.html"
+          # the broken fixture must fail the gate (exit 1) and report defects as JSON
+          if node "$GITHUB_WORKSPACE/bin/visproof.js" gate "$GITHUB_WORKSPACE/examples/broken.html" >/dev/null 2>&1; then
+            echo "gate passed on the broken fixture; expected failure"; exit 1
+          fi
+          DEFECTS="$(node "$GITHUB_WORKSPACE/bin/visproof.js" check "$GITHUB_WORKSPACE/examples/broken.html" --json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const j=JSON.parse(s);console.log(j.defects?j.defects.length:j.length)})")"
+          test "$DEFECTS" -ge 1
+          test -f visproof-reports/report.json
+          echo "smoke OK ($DEFECTS defects found on the broken fixture)"

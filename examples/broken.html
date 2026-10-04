@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Acme — Broken demo</title>
+<style>
+body { margin: 0; font-family: system-ui, sans-serif; background: #ffffff; color: #0f172a; }
+.wrap { padding: 24px; max-width: 900px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1 id="overflow-headline" style="width:200px;white-space:nowrap;overflow:hidden;text-overflow:clip;background:#ffffff;color:#0f172a;font-size:32px;margin:0 0 24px">This headline is way too long and will overflow its tiny container without wrapping at all</h1>
+<div style="position:relative;height:120px;margin-bottom:24px;background:#ffffff">
+<p style="position:absolute;top:0;left:20px;width:220px;margin:0;background:#ffffff;color:#0f172a">Overlapping text block number one with some content here for collision</p>
+<p style="position:absolute;top:10px;left:30px;width:220px;margin:0;background:#ffffff;color:#0f172a">Overlapping text block number two overlapping the first one badly</p>
+</div>
+<div style="width:300px;height:80px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:24px;background:#ffffff">
+<div style="height:200px;padding:8px;color:#0f172a">Clipped card content that is much taller than its parent container and gets cut off with important information hidden from the user view beyond the box</div>
+</div>
+<div style="margin-bottom:24px"><button style="width:16px;height:16px;font-size:8px;padding:0;line-height:1" aria-label="close">X</button></div>
+<div style="position:absolute;left:-600px;top:400px;width:120px;height:30px;background:#ffffff;color:#0f172a">Hidden content off screen left</div>
+</div>
+<footer style="background:#ffffff;color:#cccccc;padding:20px;margin-top:40px">Low contrast footer text that is hard to read for users with visual impairments and fails checks</footer>
+</body>
+</html>

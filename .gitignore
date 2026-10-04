@@ -1,0 +1,17 @@
+# local-only working files (not part of the published project)
+tests/
+MISSION.md
+SPEC.md
+RUNBOOK.md
+PROGRESS.md
+ERROR_LOG.md
+RESEARCH.md
+prompts/
+.telegram.env
+.aider*
+node_modules/
+visproof-reports/
+*.log
+.DS_Store
+coverage/
+.nyc_output/
