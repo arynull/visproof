@@ -1,0 +1,30 @@
+{
+  "name": "visproof",
+  "version": "0.1.0",
+  "description": "Headless visual QA for HTML pages",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arynull/visproof.git"
+  },
+  "bin": {
+    "visproof": "bin/visproof.js"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "lint": "eslint src/ bin/"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "js-yaml": "^4.1.0",
+    "playwright": "^1.44.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
