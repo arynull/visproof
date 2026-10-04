@@ -244,9 +244,10 @@ export function detectClippedContent(elements, ruleConfig = {}, viewport) {
   for (const el of elements) {
     const anc = el.overflowHiddenAncestor;
     if (!anc) continue;
-    if (el.selector && anc.selector && el.selector === anc.selector) continue;
     const r = rectOf(el);
     if (!r) continue;
+    if (el.selector && anc.selector && el.selector === anc.selector &&
+        r.x === anc.x && r.y === anc.y && r.w === anc.w && r.h === anc.h) continue;
     if (r.x < anc.x - 2 || r.y < anc.y - 2 || r.x + r.w > anc.x + anc.w + 2 || r.y + r.h > anc.y + anc.h + 2) {
       out.push({
         rule: "clipped-content",
