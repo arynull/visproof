@@ -1,6 +1,6 @@
 {
   "name": "visproof",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Headless visual QA for HTML pages",
   "type": "module",
   "license": "MIT",
@@ -18,7 +18,9 @@
   "dependencies": {
     "commander": "^12.1.0",
     "js-yaml": "^4.1.0",
-    "playwright": "^1.44.0"
+    "pixelmatch": "^5.1.0",
+    "playwright": "^1.44.0",
+    "pngjs": "^7.0.0"
   },
   "devDependencies": {
     "eslint": "^9.0.0",

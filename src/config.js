@@ -15,6 +15,7 @@ export const DEFAULT_RULES = {
   "small-tap-target": { level: "warn", minSize: 24 },
   "off-viewport": { level: "error" },
   "off-palette": { level: "info" },
+  "visual-regression": { level: "error", maxDiffPct: 0.1 },
 };
 
 export const DEFAULT_CONFIG = {
