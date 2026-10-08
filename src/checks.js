@@ -23,6 +23,28 @@ export async function collectLayoutData(page) {
       }
       return parts.join(" > ");
     }
+    function bgAlpha(bg) {
+      if (!bg) return 0;
+      const s = String(bg).trim().toLowerCase();
+      if (s === "transparent") return 0;
+      const m = s.match(/^rgba?\(\s*([^)]+)\)/);
+      if (!m) return 1;
+      const parts = m[1].split(",").map((x) => x.trim());
+      if (parts.length >= 4) {
+        const a = Number(parts[3]);
+        return Number.isNaN(a) ? 1 : a;
+      }
+      return 1;
+    }
+    function effectiveBg(el) {
+      let cur = el;
+      while (cur && cur.nodeType === 1) {
+        const bg = getComputedStyle(cur).backgroundColor;
+        if (bgAlpha(bg) >= 0.05) return bg;
+        cur = cur.parentElement;
+      }
+      return "rgb(255, 255, 255)";
+    }
     const out = [];
     const all = document.querySelectorAll("*");
     for (const el of all) {
@@ -59,6 +81,7 @@ export async function collectLayoutData(page) {
         fontSize: parseFloat(style.fontSize) || 16,
         color: style.color,
         backgroundColor: style.backgroundColor,
+        effectiveBackgroundColor: effectiveBg(el),
         scrollWidth: el.scrollWidth,
         clientWidth: el.clientWidth,
         scrollHeight: el.scrollHeight,
@@ -270,7 +293,8 @@ export function detectLowContrast(elements, ruleConfig = {}, viewport) {
   const out = [];
   for (const el of elements) {
     if (!el.hasText) continue;
-    const ratio = contrastRatio(el.color, el.backgroundColor);
+    const bg = el.effectiveBackgroundColor || el.backgroundColor;
+    const ratio = contrastRatio(el.color, bg);
     if (ratio == null) continue;
     if (ratio < minRatio) {
       const r = rectOf(el);
@@ -281,7 +305,7 @@ export function detectLowContrast(elements, ruleConfig = {}, viewport) {
         viewport: label,
         selector: el.selector,
         box: { ...r },
-        detail: `Contrast ${ratio.toFixed(2)}:1 below ${minRatio}:1 (${el.color} on ${el.backgroundColor})`,
+        detail: `Contrast ${ratio.toFixed(2)}:1 below ${minRatio}:1 (${el.color} on ${bg})`,
       });
     }
   }
