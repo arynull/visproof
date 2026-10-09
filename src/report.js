@@ -101,3 +101,65 @@ ${imgs}
   fs.writeFileSync(htmlPath, html);
   return { jsonPath, htmlPath };
 }
+
+export async function writeGalleryReport(components, outDir) {
+  fs.mkdirSync(outDir, { recursive: true });
+  const jsonPath = path.join(outDir, "gallery-report.json");
+  fs.writeFileSync(jsonPath, JSON.stringify(components, null, 2) + "\n");
+  const seen = new Set();
+  for (const c of components || []) {
+    for (const d of c.defects || []) {
+      if (d && d.screenshot && !seen.has(d.screenshot)) {
+        seen.add(d.screenshot);
+        const src = d.screenshot;
+        const dest = path.join(outDir, path.basename(src));
+        if (fs.existsSync(src) && path.resolve(src) !== path.resolve(dest)) {
+          fs.copyFileSync(src, dest);
+        }
+      }
+    }
+  }
+  let existing = [];
+  try {
+    existing = fs.readdirSync(outDir);
+  } catch {
+    existing = [];
+  }
+  const esc = (v) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const sections = (components || []).map((c) => {
+    const rows = (c.defects || []).map((d, i) => {
+      const color = d.severity === "error" ? "#ef4444" : d.severity === "warn" ? "#f59e0b" : "#3b82f6";
+      return `<tr><td>${i + 1}</td><td><span style="display:inline-block;padding:2px 8px;border-radius:999px;color:#fff;background:${color}">${esc(d.severity)}</span></td><td>${esc(d.rule)}</td><td>${esc(d.viewport)}</td><td><code>${esc(d.selector)}</code></td><td>${esc(d.detail)}</td></tr>`;
+    }).join("\n");
+    const annotated = existing.filter((f) => f.startsWith(`${c.component}-`) && f.endsWith(".png")).sort();
+    const diffs = [];
+    for (const d of c.defects || []) {
+      if (d && d.screenshot) {
+        const base = path.basename(d.screenshot);
+        if (!annotated.includes(base) && !diffs.includes(base)) diffs.push(base);
+      }
+    }
+    const evidence = [...annotated, ...diffs].map((base) => {
+      return `<h3>${esc(base)}</h3><img src="${esc(base)}" style="max-width:100%;border:1px solid #e2e8f0;border-radius:8px" />`;
+    }).join("\n");
+    return `<section><h2>${esc(c.component)} — ${c.errors} errors, ${c.warns} warns</h2><table><thead><tr><th>#</th><th>Severity</th><th>Rule</th><th>Viewport</th><th>Selector</th><th>Detail</th></tr></thead><tbody>${rows || '<tr><td colspan="6">No defects</td></tr>'}</tbody></table>${evidence}</section>`;
+  }).join("\n");
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>visproof gallery report</title>
+<style>body{font-family:system-ui,sans-serif;margin:0;background:#fff;color:#0f172a}header{padding:20px 24px;border-bottom:1px solid #e2e8f0}main{padding:24px;max-width:1100px;margin:0 auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #e2e8f0;padding:8px;text-align:left;vertical-align:top}th{background:#f1f5f9}code{font-size:12px}</style>
+</head>
+<body>
+<header><h1>visproof gallery report</h1><p>${(components || []).length} components</p></header>
+<main>
+${sections || "<p>No components</p>"}
+</main>
+</body>
+</html>`;
+  const htmlPath = path.join(outDir, "gallery-report.html");
+  fs.writeFileSync(htmlPath, html);
+  return { jsonPath, htmlPath };
+}
