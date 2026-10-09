@@ -45,4 +45,7 @@ jobs:
           DEFECTS="$(node "$GITHUB_WORKSPACE/bin/visproof.js" check "$GITHUB_WORKSPACE/examples/broken.html" --json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const j=JSON.parse(s);console.log(j.defects?j.defects.length:j.length)})")"
           test "$DEFECTS" -ge 1
           test -f visproof-reports/report.json
+          node "$GITHUB_WORKSPACE/bin/visproof.js" gallery init
+          test -f gallery/card.html
+          node "$GITHUB_WORKSPACE/bin/visproof.js" gallery check
           echo "smoke OK ($DEFECTS defects found on the broken fixture)"

@@ -36,6 +36,14 @@ visproof gate <html> [--viewport WxH]
 
 Exits 0 only when zero error-severity defects are found, otherwise exits 1. Prints PASS or FAIL to stdout. Use it to block deploys on regressions.
 
+visproof gallery init [--dir gallery]
+
+Scaffolds a component gallery (card, navbar, form, table fixtures + gallery.md).
+
+visproof gallery check [--dir gallery] [--out dir] [--viewport WxH]
+
+Checks every component fixture with the standard rule set, writes <out>/gallery/gallery-report.json + gallery-report.html with per-component sections, exits 1 on any error-severity defect.
+
 ## Visual-regression rule
 
 When a baseline exists for a viewport, check and gate add pixel-diff evidence:
@@ -84,6 +92,16 @@ When a visual change is intentional, re-approve it:
     visproof gate examples/good.html
 
 Inspect the new baseline PNGs, commit or archive them with your release, then require gate to pass before deploy.
+
+## Component gallery and per-component drift
+
+Fixtures are standalone HTML pages, one per component. The component name is the fixture basename without extension.
+
+Approve a component baseline with the baseline command on the fixture file:
+
+    visproof baseline gallery/card.html --out ./visproof-reports
+
+Gallery check uses the shared <out>/baselines store, keyed by fixture slug — the same store the baseline command writes to. Later gallery check runs flag per-component visual drift. Re-baselining one component leaves the others intact.
 
 ## Configuration
 
