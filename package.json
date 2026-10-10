@@ -1,6 +1,6 @@
 {
   "name": "visproof",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Headless visual QA for HTML pages",
   "type": "module",
   "license": "MIT",

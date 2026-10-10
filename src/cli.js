@@ -11,7 +11,7 @@ import { initGalleryPackage, listGalleryFixtures } from "./gallery.js";
 import { baselineDir, baselineFileName, entryFor, mergeBaselineManifest, pageSlugFor } from "./baselines.js";
 
 const program = new Command();
-program.name("visproof").description("Headless visual QA for HTML pages").version("0.3.0");
+program.name("visproof").description("Headless visual QA for HTML pages").version("0.3.1");
 
 program
   .command("init")
