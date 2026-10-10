@@ -28,7 +28,7 @@ Captures approved baseline screenshots. This is the approve flow for visual regr
 
 baseline renders every configured viewport (or the --viewport override) exactly like render, but writes un-annotated screenshots to <out>/baselines/<page>-<label>.png (where <page> is a slug of the checked file name or page URL) and records them in <out>/baselines/baselines.json. Review the PNGs once, then keep them. One report directory can hold baselines for many pages; re-baselining one page leaves the others' entries intact. Later check and gate runs compare fresh renders against these approved images.
 
-visproof check <html> [--viewport WxH] [--out dir] [--json]
+visproof check <html> [--viewport WxH] [--out dir] [--json] [--limit N]
 
 Checks the page for visual defects, writes annotated screenshots (<out>/<label>.png), report.json, and report.html. Prints defect counts to stderr (or the defect array to stdout with --json). Exits 1 when any error-severity defect is found.
 
