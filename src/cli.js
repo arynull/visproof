@@ -154,12 +154,13 @@ async function runCheckFlow(html, opts, isGate) {
     }
   } else {
     await writeReports(defects, screenshots, outDir);
+    const total = defects.length;
+    const errors = defects.filter((d) => d.severity === "error").length;
+    const shown = opts.limit ? defects.slice(0, opts.limit) : defects;
     if (opts.json) {
-      console.log(JSON.stringify(defects, null, 2));
-    } else {
-      const errors = defects.filter((d) => d.severity === "error").length;
-      console.error(`Found ${defects.length} defects (${errors} errors). Reports in ${outDir}`);
+      console.log(JSON.stringify(shown, null, 2));
     }
+    console.error(`Found ${total} defects (${errors} errors). Reports in ${outDir}`);
     const hasError = defects.some((d) => d.severity === "error");
     if (hasError) process.exit(1);
   }
@@ -172,7 +173,16 @@ program
   .option("--json", "print defect array to stdout")
   .option("--out <dir>", "output directory")
   .option("--viewport <vp>", "viewport WxH")
+  .option("--limit <n>", "cap number of defects listed (default: show all)")
   .action(async (html, opts) => {
+    if (opts.limit !== undefined) {
+      const n = Number(opts.limit);
+      if (!Number.isInteger(n) || n <= 0) {
+        console.error(`Invalid limit: ${opts.limit}, expected a positive integer`);
+        process.exit(2);
+      }
+      opts.limit = n;
+    }
     await runCheckFlow(html, opts, false);
   });
 
